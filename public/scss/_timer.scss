@@ -1,0 +1,12 @@
+// main: style.scss
+
+#timer {
+    position: absolute;
+    top: 2.6%;
+    right: 1.95%;
+
+    font-size: 20px;
+    font-weight: bold;
+
+    transition: opacity 0.5s;
+}

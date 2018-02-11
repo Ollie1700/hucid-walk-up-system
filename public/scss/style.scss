@@ -1,0 +1,74 @@
+
+// BOOTSTRAP OVERRIDES
+@import "buttons";
+
+// OTHER
+@import "timer";
+
+// PAGES
+@import "page-index";
+@import "page-dashboard";
+
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+@import url('https://fonts.googleapis.com/css?family=PT+Serif');
+
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Open Sans', sans-serif;
+    color: #232323;
+}
+
+.index-title {
+    font-family: 'PT Serif', serif;
+}
+
+#wrapper {
+    width: 1024px;
+    height: 768px;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    border: 1px solid red;
+    background-color: #F8FBFB;
+
+    padding: 0;
+    margin: 0;
+}
+
+#sidebar {
+    height: 100%;
+
+    padding-top: 22px;
+    padding-bottom: 22px;
+
+    background-color: #124094;
+
+    a#return-to-index {
+        width: 53px;
+        height: 53px;
+
+        padding: 9px;
+
+        .fa.fa-cog {}
+    }
+}
+
+#page-content {
+    padding: 52px 44px;
+
+    h1.page-title {
+        margin-bottom: 50px;
+    }
+}
+
+.main-container {
+    height: 100%;
+
+    .main-container-row {
+        height: 100%;
+    }
+}
