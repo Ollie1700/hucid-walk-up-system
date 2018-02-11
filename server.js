@@ -30,6 +30,7 @@ route('/accommodation', 'accommodation');
     route('/accommodation/example', 'accommodation-single');
 
 route('/schedule', 'schedule');
+    route('/schedule/example', 'schedule-single');
 
 route('/restaurants', 'restaurants');
 
@@ -37,6 +38,12 @@ route('/theatres', 'theatres');
 
 route('/map', 'map');
 
+route('/email', 'email');
+    route('/email/sent', 'email-sent');
+
+route('/lecture-halls', 'lecture-halls');
+
+route('/speaker', 'speaker');
 
 // END ROUTES //
 // START APP

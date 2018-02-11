@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>ECIS 2018</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/style.min.css">
+
+    <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+</head>
+<body>
+    <div id="wrapper">
+
+        <div id="timer" style="opacity:0;">
+            <span class="hours"></span>:<span class="minutes"></span>:<span class="seconds"></span>
+        </div>
+
+        <div class="container-fluid main-container">
+
+            <div class="row main-container-row">
+
+                <div id="sidebar" class="col-1 d-flex flex-column justify-content-between">
+
+                    <img src="/img/ecis-reverse-logo.png">
+
+                    <a id="return-to-index" class="btn btn-light" href="/">
+                        <i class="fa fa-cog fa-2x"></i>
+                    </a>
+
+                </div>
+
+                <div id="page-content" class="col-11">
+
+                    <h1 class="page-title">
+                        Directions
+                    </h1>
+
+                    <div class="row">
+
+                        <div class="col-12 col-md-4">
+
+                            <div class="map-card text-center">
+
+                                <p>
+                                    <strong>From:</strong>
+                                </p>
+
+                                <p>
+                                    <select class="custom-select">
+                                        <option>Current Location</option>
+                                        <option>Some place</option>
+                                        <option>Some other place</option>
+                                        <option>Some place</option>
+                                        <option>Some other place</option>
+                                        <option>Some place</option>
+                                        <option>Some other place</option>
+                                    </select>
+                                </p>
+
+                                <p>
+                                    <strong>To:</strong>
+                                </p>
+
+                                <p>
+                                    <select class="custom-select">
+                                        <option>Current Location</option>
+                                        <option>Some place</option>
+                                        <option>Some other place</option>
+                                        <option>Some place</option>
+                                        <option>Some other place</option>
+                                        <option>Some place</option>
+                                        <option>Some other place</option>
+                                    </select>
+                                </p>
+
+                                <p>
+                                    <a href="#" class="btn btn-primary">
+                                        Show On Map
+                                    </a>
+                                </p>
+
+                                <p>
+                                    <a href="/email" class="btn btn-warning">
+                                        Sent To Email <i class="fa fa-paper-plane"></i>
+                                    </a>
+                                </p>
+
+                            </div>
+
+                            <div class="map-card text-center">
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?data=HelloWorld&amp;size=200x200">
+                            </div>
+
+                        </div>
+
+                        <div class="col-12 col-md-8">
+
+                            <img style="width:100%;height:100%;" src="/img/map-placeholder.png">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div> <!-- /#wrapper -->
+    <!-- END BODY CONTENT -->
+    <!-- JS -->
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="/js/ecis.js"></script>
+</body>
+</html>
