@@ -1,0 +1,132 @@
+@import url("https://fonts.googleapis.com/css?family=Open+Sans");
+@import url("https://fonts.googleapis.com/css?family=PT+Serif");
+#timer {
+  position: absolute;
+  top: 2.6%;
+  right: 1.95%;
+  font-size: 20px;
+  font-weight: bold;
+  transition: opacity 0.5s; }
+
+.ecis-logo-row {
+  margin-top: 120px;
+  margin-bottom: 40px; }
+
+.language-selector-row {
+  margin-top: 80px; }
+
+.dashboard-card {
+  display: block;
+  height: 245px;
+  padding: 55px;
+  margin-bottom: 60px;
+  border-radius: 2px;
+  box-shadow: 0 8px 16px 0 rgba(12, 0, 51, 0.1);
+  background-color: #FFF;
+  text-align: center; }
+  .dashboard-card:link, .dashboard-card:visited, .dashboard-card:hover, .dashboard-card:focus, .dashboard-card:active {
+    color: #232323;
+    text-decoration: none; }
+  .dashboard-card .dashboard-card-icon {
+    width: 77px;
+    height: 77px;
+    padding: 12px;
+    margin: 0 auto;
+    background-color: #F3B600;
+    color: #FFF;
+    border-radius: 100%;
+    transition: transform 0.5s; }
+  .dashboard-card:hover .dashboard-card-icon, .dashboard-card:focus .dashboard-card-icon {
+    transform: scale(1.1); }
+  .dashboard-card .dashboard-card-title {
+    margin-top: 50px;
+    font-size: 20px; }
+
+.upcoming-talk-card {
+  padding: 20px;
+  margin-bottom: 25px;
+  background-color: #FFF;
+  box-shadow: 0 24px 32px 0 rgba(12, 0, 51, 0.1); }
+
+.map-card {
+  padding: 20px;
+  margin-bottom: 20px;
+  background-color: #FFF;
+  border-radius: 3px;
+  box-shadow: 0 8px 16px 0 rgba(12, 0, 51, 0.1); }
+
+.send-button {
+  width: 100%;
+  padding: 10px 0;
+  text-align: center; }
+
+.search-row {
+  margin-bottom: 30px; }
+
+.gallery-img {
+  margin-top: 10px;
+  margin-bottom: 10px; }
+
+.num-results-row {
+  margin-top: 50px;
+  margin-bottom: 50px; }
+
+.profile-pic {
+  border-radius: 100%; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Open Sans', sans-serif;
+  color: #232323; }
+
+img {
+  max-width: 100%;
+  height: auto; }
+
+.index-title {
+  font-family: 'PT Serif', serif; }
+
+#wrapper {
+  width: 1024px;
+  height: 768px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 1px solid red;
+  background-color: #F8FBFB;
+  padding: 0;
+  margin: 0; }
+
+#sidebar {
+  height: 100%;
+  padding-top: 22px;
+  padding-bottom: 22px;
+  background-color: #124094;
+  z-index: 10; }
+  #sidebar a#return-to-index {
+    width: 53px;
+    height: 53px;
+    padding: 9px; }
+
+#page-content {
+  padding: 52px 44px; }
+  #page-content .inner {
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+    overflow-x: hidden; }
+  #page-content h1.page-title {
+    margin-bottom: 50px; }
+
+.main-container {
+  height: 100%; }
+  .main-container .main-container-row {
+    height: 100%; }
+
+.ecis-card {
+  padding: 20px;
+  margin-bottom: 20px;
+  background-color: #FFF;
+  box-shadow: 0 24px 32px 0 rgba(12, 0, 51, 0.1); }
