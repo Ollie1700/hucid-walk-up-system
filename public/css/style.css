@@ -1,5 +1,10 @@
 @import url("https://fonts.googleapis.com/css?family=Open+Sans");
 @import url("https://fonts.googleapis.com/css?family=PT+Serif");
+.center-flex {
+  display: flex;
+  justify-content: center;
+  align-items: center; }
+
 #timer {
   position: absolute;
   top: 2.6%;
@@ -54,6 +59,10 @@
   background-color: #FFF;
   border-radius: 3px;
   box-shadow: 0 8px 16px 0 rgba(12, 0, 51, 0.1); }
+
+#map {
+  height: 400px;
+  width: 100%; }
 
 .send-button {
   width: 100%;
