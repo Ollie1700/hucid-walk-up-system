@@ -22,7 +22,13 @@
 
                 <div id="sidebar" class="col-1 d-flex flex-column justify-content-between">
 
-                    <img src="/img/ecis-reverse-logo.png">
+                    <div class="sidebar-top">
+                        <a href="/dashboard"><img src="/img/ecis-reverse-logo.png"></a>
+                        <div class="back">
+                            Back
+                            <span><i class="fas fa-2x fa-long-arrow-alt-left"></i></span>
+                        </div>
+                    </div>
 
                     <a id="return-to-index" class="btn btn-light" href="/">
                         <i class="fa fa-cog fa-2x"></i>
@@ -213,17 +219,25 @@
     <!-- JS -->
     <script>
         function setCoords() {
+            // Initialise latitude and longitude array
             let latAndLng = []
+            // Traverse to parent of button click
             const parent = this.parentNode.parentNode
+            // Get lat and long values from element's dataset attributes
             const lat = parent.dataset.lat
             const lng = parent.dataset.lng
+            // Push lat and long to array
             latAndLng.push({lat, lng})
+            // Set local storage coordinates equal to the values held in latAndLng Array
             localStorage.setItem('coords', JSON.stringify(latAndLng))
         }
 
+        // Get every button with the class 'directions'
         const directionButtons = document.querySelectorAll('.directions')
+        // Bind an click listener to each button. When any button is clicked, call setCoords
         directionButtons.forEach(button => button.addEventListener('click', setCoords))
     </script>
+    <!-- jQuery, Bootstrap -->
     <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>

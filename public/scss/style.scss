@@ -63,6 +63,14 @@ img {
 
     z-index: 10;
 
+    .back {
+        color: #FFF;
+        text-align: center;
+        text-transform: uppercase;
+        margin: 15px 0;
+        cursor: pointer;
+    }
+
     a#return-to-index {
         width: 53px;
         height: 53px;

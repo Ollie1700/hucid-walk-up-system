@@ -21,8 +21,13 @@
             <div class="row main-container-row">
 
                 <div id="sidebar" class="col-1 d-flex flex-column justify-content-between">
-
-                    <img src="/img/ecis-reverse-logo.png">
+                    <div class="sidebar-top">
+                        <a href="/dashboard"><img src="/img/ecis-reverse-logo.png"></a>
+                        <div class="back">
+                            Back
+                            <span><i class="fas fa-2x fa-long-arrow-alt-left"></i></span>
+                        </div>
+                    </div>
 
                     <a id="return-to-index" class="btn btn-light" href="/">
                         <i class="fa fa-cog fa-2x"></i>
@@ -82,7 +87,7 @@
 
                                 <p>
                                     <a href="/email" class="btn btn-warning">
-                                        Sent To Email <i class="fa fa-paper-plane"></i>
+                                        Send To Email <i class="fa fa-paper-plane"></i>
                                     </a>
                                 </p>
 
@@ -110,10 +115,10 @@
     <!-- END BODY CONTENT -->
     <!-- JS -->
     <script>
-        // Get current location of the walk up system
-        // These lets are global so we can access the location in another function
+        // These lets are global so we can access our location in another function
         let myLocationLat, myLocationLng
         function getCurrentLocation() {
+            // Asynchronously grabs the current location of the walk up system and pass those values into a map initalizer function
             navigator.geolocation.getCurrentPosition((position) => {
                 myLocationLat = position.coords.latitude
                 myLocationLng = position.coords.longitude
@@ -122,65 +127,121 @@
             })
         }
 
+        function geoCodeLatLng(geocoder, destination) {
+            // Get dropdowns for start and end
+            const start = document.getElementById('start')
+            const end = document.getElementById('end')
+            // Get latLng for start and end
+            const latlngStart = {lat: parseFloat(myLocationLat), lng: parseFloat(myLocationLng)}
+            const latlngEnd = destination
+
+            // To populate the dropwdowns, we must convert lat lng to string, this is done with reverse geocoding
+            geocoder.geocode({'location': latlngStart}, function(results, status) {
+                if (status === 'OK') {
+                    let startVal = results[0].formatted_address
+                    let startOption = document.createElement('option')
+                    startOption.textContent = startVal
+                    startOption.setAttribute('selected', 'selected')
+                    start.appendChild(startOption)
+                }
+            })
+
+            geocoder.geocode({'location': destination}, function(results, status) {
+                if (status === 'OK') {
+                    console.log('yepppp');
+                    let endVal = results[0].formatted_address
+                    let endOption = document.createElement('option')
+                    endOption.textContent = endVal
+                    endOption.setAttribute('selected', 'selected')
+                    end.appendChild(endOption)
+                }
+            })
+        }
+
         // Initialise map
     function initMap(currentLocation) {
+        // Stuff that allows us to create directions
         let directionsService = new google.maps.DirectionsService();
         let directionsDisplay = new google.maps.DirectionsRenderer();
+
+        // Google Maps API Config
         const mapOptions = {
           zoom: 13,
           center: currentLocation
         }
+
+        // Get destination coordinates from localStorage, which are created in 'upcoming-talks.html'
         const destinationCoords = JSON.parse(localStorage.getItem('coords')) || []
         const destinationCoordsObj = destinationCoords[0]
         let destination
+        // If there's nothing in localStorage, just set a 0,0 lng lat which d
         if(!destinationCoordsObj) {
             destination = {
                 lat: 0,
                 lng: 0
             }
+        // Otherwise, set destination coords (we use the Number constructor as when we intiially parse localStorage, the values are stored as strings)
         } else {
             destination = {
                 lat: Number(destinationCoordsObj['lat']),
                 lng: Number(destinationCoordsObj['lng'])
             }
+            // Use reverse geocoding to...
+            let geocoder = new google.maps.Geocoder;
+            geoCodeLatLng(geocoder, destination);
         }
-        console.log(destination);
+
+        // Create a new Google Map with the config options
         const map = new google.maps.Map(document.getElementById('map'), mapOptions);
         directionsDisplay.setMap(map);
+
+        // Google Maps API origin and destination config
         const request = {
             origin: currentLocation,
             destination,
             travelMode: 'DRIVING'
         }
+
+        // If the directions config is legal then set the directions accordingly
         directionsService.route(request, function(result, status) {
             if (status == 'OK') {
                 directionsDisplay.setDirections(result);
             }
         });
 
-        // Nice way to pass in directionsService and directionsDisplay to another function via event listener
+        // Pass in existing directionsService and directionsDisplay state to another function via event listener
+        // If we don't create this anonymous function and manually create a new directionsService and directionsDisplay in calculateAndDisplayRoute, then JS will throw an 'already initialised' error
         var onChangeHandler = function() {
           calculateAndDisplayRoute(directionsService, directionsDisplay);
         };
+
+        // If any of the dropdowns are changed, call onChangeHandler function
         document.getElementById('start').addEventListener('change', onChangeHandler);
         document.getElementById('end').addEventListener('change', onChangeHandler);
     }
 
         // Update route once a new dropdown option is selected
     function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+        // Get current values of the start and end
         let start = document.getElementById('start').value
         let end = document.getElementById('end').value
+
+        // If the start and end values are equal to 'my location' then get lat and long from our globals defined at the top
         if(start === 'My location') {
            start = {lat: myLocationLat, lng: myLocationLng}
         }
         if(end === 'My location') {
            end = {lat: myLocationLat, lng: myLocationLng}
         }
+
+        // Google Maps API origin and destination config
         const request = {
             origin: start,
             destination: end,
             travelMode: 'DRIVING'
         };
+
+        // If the directions config is legal then set the directions accordingly
         directionsService.route(request, function(result, status) {
             if (status == 'OK') {
                 directionsDisplay.setDirections(result);

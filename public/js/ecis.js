@@ -1,5 +1,9 @@
 $(document).ready(function() {
 
+    const backButton = document.querySelector('.back')
+
+    backButton.addEventListener('click', () => window.history.back());
+
     // TIMER //
     (function() {
 
