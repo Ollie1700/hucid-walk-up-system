@@ -55,14 +55,24 @@
 
 .map-card {
   padding: 20px;
-  margin-bottom: 20px;
   background-color: #FFF;
   border-radius: 3px;
   box-shadow: 0 8px 16px 0 rgba(12, 0, 51, 0.1); }
+  .map-card.qr-code-container {
+    margin-top: 10px; }
+
+.map-directions-container {
+  flex-grow: 1; }
 
 #map {
-  height: 400px;
-  width: 100%; }
+  width: 100%;
+  height: 100%;
+  box-shadow: 0 8px 16px 0 rgba(12, 0, 51, 0.1); }
+
+.qr-code-container {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.5s; }
 
 .send-button {
   width: 100%;
