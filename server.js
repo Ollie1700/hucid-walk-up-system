@@ -13,6 +13,18 @@ var route = function(uri, page) {
 };
 
 // END GLOBALS
+// AUTO PULL ON GIT PUSH
+const { exec } = require('child_process');
+app.post('/pull-from-git-please', (req, res) => {
+    exec('git pull', (err, stdout, stderr) => {
+        if(err) {
+            res.status(500).send(stderr);
+            return;
+        }
+        res.status(204).send(stdout);
+    });
+});
+
 // SERVE STATIC FILES //
 
 app.use(express.static(__dirname + '/public'));
