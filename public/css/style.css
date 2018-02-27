@@ -132,6 +132,7 @@ img {
     padding: 9px; }
 
 #page-content {
+  height: 100&;
   padding: 52px 44px; }
   #page-content .inner {
     width: 100%;
