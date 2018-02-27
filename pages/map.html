@@ -114,7 +114,7 @@
         function getCurrentLocation() {
             // Asynchronously grabs the current location of the walk up system and pass those values into a map initalizer function
             navigator.geolocation.getCurrentPosition((position) => {
-                myLocationLat = position.coords.latitude
+                myLocationLat = position.coords.latitude                                              
                 myLocationLng = position.coords.longitude
                 const currentLocation = {lat: myLocationLat, lng: myLocationLng}
                 initMap(currentLocation)
@@ -180,6 +180,7 @@
                 lat: Number(destinationCoordsObj['lat']),
                 lng: Number(destinationCoordsObj['lng'])
             }
+            console.log(destinationCoords)
             // Use reverse geocoding to...
             let geocoder = new google.maps.Geocoder;
             geoCodeLatLng(geocoder, destination);
