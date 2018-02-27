@@ -1,11 +1,15 @@
 $(document).ready(function() {
 
-    const backButton = document.querySelector('.back')
-
-    backButton.addEventListener('click', () => window.history.back());
+    // BACK BUTTON
+    (() => {
+        const backButton = $('.back');
+        if(backButton) {
+            backButton.click(() => window.history.back());
+        }
+    })();
 
     // TIMER //
-    (function() {
+    (() => {
 
         var
         timer = $('#timer'),

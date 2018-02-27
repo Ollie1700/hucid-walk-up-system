@@ -13,7 +13,7 @@
     <div id="wrapper">
 
         <div id="timer" style="opacity:0;">
-            <span class="hours"></span>:<span class="minutes"></span>:<span class="seconds"></span>
+            <i class="fa fa-clock"></i> <span class="hours"></span>:<span class="minutes"></span><span style="display:none;" class="seconds"></span>
         </div>
 
         <div class="container-fluid main-container">
@@ -35,13 +35,13 @@
 
                 </div>
 
-                <div id="page-content" class="col-11">
+                <div id="page-content" class="col-11 d-flex flex-column align-items-stretch">
 
                     <h1 class="page-title">
                         Directions
                     </h1>
 
-                    <div class="row">
+                    <div class="row mb-auto map-directions-container">
 
                         <div class="col-12 col-md-4">
 
@@ -66,7 +66,7 @@
 
                                 <p>
                                     <select id="end" class="custom-select">
-                                        <option>My location</option>
+                                        <option disabled selected>-- Select Destination --</option>
                                         <option>Richmond Building, Southsea</option>
                                         <option>James Watson Hall, Southsea</option>
                                         <option>Portland Building, Southsea</option>
@@ -87,8 +87,9 @@
 
                             </div>
 
-                            <div class="map-card text-center">
-                                <img src="//api.qrserver.com/v1/create-qr-code/?data=HelloWorld&amp;size=200x200">
+                            <div class="map-card qr-code-container text-center">
+                                <strong>Send map to your phone</strong>
+                                <img id="qr-code">
                             </div>
 
                         </div>
@@ -108,13 +109,33 @@
     </div> <!-- /#wrapper -->
     <!-- END BODY CONTENT -->
     <!-- JS -->
+    <script src="//code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="/js/ecis.js"></script>
     <script>
+
         // These lets are global so we can access our location in another function
-        let myLocationLat, myLocationLng
+        let myLocationLat, myLocationLng;
+
+        // Generating the QR code
+        var
+        qrCode = $('#qr-code'),
+        qrCodeContainer = $('.qr-code-container'),
+        qrApi = '//api.qrserver.com/v1/create-qr-code/?size=200x200&data=',
+        gmapsDirApi = 'https://www.google.com/maps/dir/?api=1&',
+        setQRCode = function(origin, destination) {
+            var gmapsUri = gmapsDirApi + 'origin=' + origin + '&destination=' + destination;
+            gmapsUri = gmapsUri.replace(/ /g, '+');
+            qrCode.attr('src', qrApi + encodeURIComponent(gmapsUri));
+            qrCodeContainer.css('display', 'block');
+            qrCodeContainer.css('opacity', '1');
+        };
+
         function getCurrentLocation() {
             // Asynchronously grabs the current location of the walk up system and pass those values into a map initalizer function
             navigator.geolocation.getCurrentPosition((position) => {
-                myLocationLat = position.coords.latitude                                              
+                myLocationLat = position.coords.latitude
                 myLocationLng = position.coords.longitude
                 const currentLocation = {lat: myLocationLat, lng: myLocationLng}
                 initMap(currentLocation)
@@ -142,7 +163,6 @@
 
             geocoder.geocode({'location': destination}, function(results, status) {
                 if (status === 'OK') {
-                    console.log('yepppp');
                     let endVal = results[0].formatted_address
                     let endOption = document.createElement('option')
                     endOption.textContent = endVal
@@ -153,101 +173,114 @@
         }
 
         // Initialise map
-    function initMap(currentLocation) {
-        // Stuff that allows us to create directions
-        let directionsService = new google.maps.DirectionsService();
-        let directionsDisplay = new google.maps.DirectionsRenderer();
+        function initMap(currentLocation) {
+            // Stuff that allows us to create directions
+            let directionsService = new google.maps.DirectionsService();
+            let directionsDisplay = new google.maps.DirectionsRenderer();
 
-        // Google Maps API Config
-        const mapOptions = {
-          zoom: 13,
-          center: currentLocation
-        }
-
-        // Get destination coordinates from localStorage, which are created in 'upcoming-talks.html'
-        const destinationCoords = JSON.parse(localStorage.getItem('coords')) || []
-        const destinationCoordsObj = destinationCoords[0]
-        let destination
-        // If there's nothing in localStorage, just set a 0,0 lng lat which d
-        if(!destinationCoordsObj) {
-            destination = {
-                lat: 0,
-                lng: 0
+            // Google Maps API Config
+            const mapOptions = {
+              zoom: 13,
+              center: currentLocation
             }
-        // Otherwise, set destination coords (we use the Number constructor as when we intiially parse localStorage, the values are stored as strings)
-        } else {
-            destination = {
-                lat: Number(destinationCoordsObj['lat']),
-                lng: Number(destinationCoordsObj['lng'])
+
+            // Get destination coordinates from localStorage, which are created in 'upcoming-talks.html'
+            const destinationCoords = JSON.parse(localStorage.getItem('coords')) || []
+            const destinationCoordsObj = destinationCoords[0]
+            let destination
+            // If there's nothing in localStorage, just set a 0,0 lng lat which d
+            if(!destinationCoordsObj) {
+                destination = {
+                    lat: 0,
+                    lng: 0
+                }
+            // Otherwise, set destination coords (we use the Number constructor as when we intiially parse localStorage, the values are stored as strings)
+            } else {
+                destination = {
+                    lat: Number(destinationCoordsObj['lat']),
+                    lng: Number(destinationCoordsObj['lng'])
+                }
+                // Use reverse geocoding to...
+                let geocoder = new google.maps.Geocoder;
+                geoCodeLatLng(geocoder, destination);
             }
-            // Use reverse geocoding to...
-            let geocoder = new google.maps.Geocoder;
-            geoCodeLatLng(geocoder, destination);
-        }
 
-        // Create a new Google Map with the config options
-        const map = new google.maps.Map(document.getElementById('map'), mapOptions);
-        directionsDisplay.setMap(map);
+            // Create a new Google Map with the config options
+            const map = new google.maps.Map(document.getElementById('map'), mapOptions);
+            directionsDisplay.setMap(map);
 
-        // Google Maps API origin and destination config
-        const request = {
-            origin: currentLocation,
-            destination,
-            travelMode: 'DRIVING'
-        }
-
-        // If the directions config is legal then set the directions accordingly
-        directionsService.route(request, function(result, status) {
-            if (status == 'OK') {
-                directionsDisplay.setDirections(result);
+            // Google Maps API origin and destination config
+            const request = {
+                origin: currentLocation,
+                destination,
+                travelMode: 'DRIVING'
             }
-        });
 
-        // Pass in existing directionsService and directionsDisplay state to another function via event listener
-        // If we don't create this anonymous function and manually create a new directionsService and directionsDisplay in calculateAndDisplayRoute, then JS will throw an 'already initialised' error
-        var onChangeHandler = function() {
-          calculateAndDisplayRoute(directionsService, directionsDisplay);
-        };
+            // If the directions config is legal then set the directions accordingly
+            directionsService.route(request, function(result, status) {
+                if (status == 'OK') {
+                    directionsDisplay.setDirections(result);
+                    setQRCode(request.origin.lat + ',' + request.origin.lng, request.destination.lat + ',' + request.destination.lng);
+                }
+            });
 
-        // If any of the dropdowns are changed, call onChangeHandler function
-        document.getElementById('start').addEventListener('change', onChangeHandler);
-        document.getElementById('end').addEventListener('change', onChangeHandler);
-    }
+            // Pass in existing directionsService and directionsDisplay state to another function via event listener
+            // If we don't create this anonymous function and manually create a new directionsService and directionsDisplay in calculateAndDisplayRoute, then JS will throw an 'already initialised' error
+            var onChangeHandler = function() {
+                calculateAndDisplayRoute(directionsService, directionsDisplay);
+            };
 
-        // Update route once a new dropdown option is selected
-    function calculateAndDisplayRoute(directionsService, directionsDisplay) {
-        // Get current values of the start and end
-        let start = document.getElementById('start').value
-        let end = document.getElementById('end').value
-
-        // If the start and end values are equal to 'my location' then get lat and long from our globals defined at the top
-        if(start === 'My location') {
-           start = {lat: myLocationLat, lng: myLocationLng}
-        }
-        if(end === 'My location') {
-           end = {lat: myLocationLat, lng: myLocationLng}
+            // If any of the dropdowns are changed, call onChangeHandler function
+            document.getElementById('start').addEventListener('change', onChangeHandler);
+            document.getElementById('end').addEventListener('change', onChangeHandler);
         }
 
-        // Google Maps API origin and destination config
-        const request = {
-            origin: start,
-            destination: end,
-            travelMode: 'DRIVING'
-        };
+            // Update route once a new dropdown option is selected
+        function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+            // Get current values of the start and end
+            let start = document.getElementById('start').value
+            let end = document.getElementById('end').value
 
-        // If the directions config is legal then set the directions accordingly
-        directionsService.route(request, function(result, status) {
-            if (status == 'OK') {
-                directionsDisplay.setDirections(result);
+            // Fade out the QR code until we get a new one
+            qrCodeContainer.css('opacity', '0');
+
+            // If the start and end values are equal to 'my location' then get lat and long from our globals defined at the top
+            if(start === 'My location') {
+               start = {lat: myLocationLat, lng: myLocationLng}
             }
-        });
-    }
+            if(end === 'My location') {
+               end = {lat: myLocationLat, lng: myLocationLng}
+            }
+
+            // Google Maps API origin and destination config
+            const request = {
+                origin: start,
+                destination: end,
+                travelMode: 'DRIVING'
+            };
+
+            // If the directions config is legal then set the directions accordingly
+            directionsService.route(request, function(result, status) {
+                if (status == 'OK') {
+                    directionsDisplay.setDirections(result);
+
+                    var
+                    origin = (typeof request.origin === 'object') ?
+                             (request.origin.lat + ',' + request.origin.lng) :
+                             (request.origin),
+
+                    destination = (typeof request.destination === 'object') ?
+                                  (request.destination.lat + ',' + request.destination.lng) :
+                                  (request.destination);
+
+                    setQRCode(origin, destination);
+                    qrCodeContainer.css('display', 'block');
+                    qrCodeContainer.css('opacity', '1');
+                }
+            });
+        }
 
     </script>
     <script async defer src="//maps.googleapis.com/maps/api/js?AIzaSyB5vpnssWpC_uebey4SPt61zMQbkrb4DRQ&callback=getCurrentLocation"></script>
-    <script src="//code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <script src="/js/ecis.js"></script>
 </body>
 </html>
