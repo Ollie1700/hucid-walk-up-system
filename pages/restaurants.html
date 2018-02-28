@@ -45,43 +45,43 @@
                         <div class="row ecis-card">
                             <div class="col-4">
                                 <p>
-                                    <strong>Search By Type</strong>
+                                    <strong>Search Within</strong>
                                 </p>
                                 <p>
-                                    <select class="custom-select">
-                                        <option>Dine-in</option>
-                                        <option>Takeaway</option>
+                                    <select class="custom-select select-radius">
+                                        <option>0.5 kilometres</option>
+                                        <option>1 kilometres</option>
+                                        <option>1.5 kilometres</option>
+                                        <option>2 kilometres</option>
+                                        <option>2.5 kilometres</option>
+                                        <option>3 kilometres</option>
                                     </select>
                                 </p>
                             </div>
                             <div class="col-4">
                                 <p>
-                                    <strong>Search By Location</strong>
+                                    <strong>Search By Open</strong>
                                 </p>
                                 <p>
-                                    <select class="custom-select">
-                                        <option>Within 0.5 miles</option>
-                                        <option>Within 0.5 miles</option>
-                                        <option>Within 0.5 miles</option>
-                                        <option>Within 0.5 miles</option>
-                                        <option>Within 0.5 miles</option>
-                                        <option>Within 0.5 miles</option>
+                                    <select class="custom-select select-hours">
+                                        <option>Open</option>
+                                        <option>Closed</option>
                                     </select>
                                 </p>
                             </div>
+
                             <div class="col-4">
-                                <p>
-                                    <strong>Search By Closing Time</strong>
-                                </p>
-                                <p>
-                                    <select class="custom-select">
-                                        <option>10pm</option>
-                                        <option>10pm</option>
-                                        <option>10pm</option>
-                                        <option>10pm</option>
-                                        <option>10pm</option>
-                                    </select>
-                                </p>
+                                    <p>
+                                        <strong>Filter By Rating</strong>
+                                    </p>
+                                    <p>
+                                        <select class="custom-select select-hours">
+                                            <option>2+</option>
+                                            <option>3+</option>
+                                            <option>4+</option>
+                                            <option>4.5+</option>
+                                        </select>
+                                    </p>
                             </div>
                         </div>
 
@@ -102,14 +102,21 @@
     <!-- END BODY CONTENT -->
     <!-- JS -->
     <script>
-        const container = document.getElementById('results-container')
-        let myLocationLat, myLocationLng
+        // Container for all our results
+        const container = document.getElementById('results-container');
+        // Our location, which will be populated with latitude and longitude after getCurrentLocation() is finished
+        let myLocationLat, myLocationLng;
+        // Default radius onload is 0.5 miles (in metres)
+        let radius = 500;
+        // Object to hold our current location latlng values
+        let currentLocation
+
         function getCurrentLocation() {
             // Asynchronously grabs the current location of the walk up system and pass those values into a map initalizer function
             navigator.geolocation.getCurrentPosition((position) => {
-                myLocationLat = position.coords.latitude
-                myLocationLng = position.coords.longitude
-                const currentLocation = {lat: myLocationLat, lng: myLocationLng}
+                myLocationLat = position.coords.latitude;
+                myLocationLng = position.coords.longitude;
+                currentLocation = {lat: myLocationLat, lng: myLocationLng};
                 initPlaces(currentLocation)
             })
         }
@@ -129,55 +136,111 @@
         }
         let service
         let request
+
         function initPlaces(currentLocation) {
             service = new google.maps.places.PlacesService(document.createElement('div'));
             request = {
                 location: currentLocation,
-                radius: '804',
+                radius,
                 type: ['restaurant']
             }
             service.nearbySearch(request, callback)
         }
 
         function callback(results, status) {
-            if(status = google.maps.places.PlacesServiceStatus.OK) {
-                container.innerHTML = results.map((result, i) => {
-                    const currentlyOpen = result.opening_hours.open_now ? 'open' : 'closed'
-                    return `
-                    <div class="row">
-                            <div class="col-12 col-md-8 offset-md-2 ecis-card">
-                                <h2>${result.name}</h2>
-                                <p>
-                                    <strong>Address:</strong> ${result.vicinity}
-                                </p>
-                                <p>
-                                    <strong>Rating:</strong> ${result.rating}
-                                </p>
-                                <p>
-                                    Currently <span class="${currentlyOpen}">${currentlyOpen}
-                                </p>
-                                <p class="d-flex align-items-center justify-content-between">
-                                    <a href="/map" class="btn btn-primary directions">Get Directions <i class="fa fa-chevron-right"></i></a>
-                                    <a href="/email" class="btn btn-warning">Send To Email <i class="fa fa-paper-plane"></i></a>
-                                </p>
-                            </div>
-                        </div>
-                    `
-                })
+            // Remove everything from container
+            while (container.firstChild) {
+                container.removeChild(container.firstChild);
+            }
+            // If everything went swimminlgy
+            if(status == google.maps.places.PlacesServiceStatus.OK) {
+                // Set the innerHTML of container equal to each result that came back from Google API
+                const newResults = results.map(result => {
+                    console.log(result);
+                    if(result.opening_hours) {
+                        const currentlyOpen = result.opening_hours.open_now ? 'open' : 'closed'
+                    }
+                    // Get distance from current location
+                    const distanceFromCurrentLocation = getDistanceFromLatLonInKm(currentLocation.lat, currentLocation.lng, result.geometry.location.lat(), result.geometry.location.lng());
+                    // Return an object on every iteration which contains HTML. It's done this way so we can the array by distance
+                    return {
+                        distance: distanceFromCurrentLocation,
+                        domContent: `
+                            <div class="row">
+                                    <div class="col-12 col-md-8 offset-md-2 ecis-card">
+                                        <h2>${result.name}</h2>
+                                        <p>
+                                            <strong>Address:</strong> ${result.vicinity}
+                                        </p>
+                                        <p>
+                                            <strong>Rating:</strong> ${result.rating}
+                                        </p>
+                                        <p>
+                                            <strong>Distance from you:</strong> ${distanceFromCurrentLocation.toFixed(2)}km
+                                        </p>
+                                        ${result.opening_hours ? (result.opening_hours.open_now ? `<p><span class="open">Open</p>` : `<p><span class="closed">Closed</span></p>`) : ''}
+                                        <p class="d-flex align-items-center justify-content-between">
+                                            <a href="/map" class="btn btn-primary directions">Get Directions <i class="fa fa-chevron-right"></i></a>
+                                            <a href="/email" class="btn btn-warning">Send To Email <i class="fa fa-paper-plane"></i></a>
+                                        </p>
+                                    </div>
+                                </div>
+                            `
+                    }
+                });
 
+                // sort newResults by "distance" property and set innerHTML of container to the HTML stored in each object
+                const sorted = newResults.sort((a, b) => a.distance - b.distance)
+                sorted.forEach(result => {
+                    container.innerHTML += result.domContent
+                })
             }
         }
 
-        function filterRadius() {
+        function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
 
+            function deg2rad(deg) {
+                 return deg * (Math.PI / 180);
+            }
+
+            let R = 6371; // Radius of the earth in km
+            let dLat = deg2rad(lat2 - lat1);  // deg2rad below
+            let dLon = deg2rad(lon2 - lon1);
+            let a =
+                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2)
+                ;
+            let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            let d = R * c; // Distance in km
+            return d
+        }
+
+        function getMetres(km) {
+            console.log(km);
+            console.log('km issssss ' + km);
+            return km * 1000;
+        }
+
+        function filterRadius() {
+            // Get checkbox value
+            const selection = this.value;
+            // Get the exact amount of kilometre(s)
+            const kilometres = Number(selection.substring(0, selection.length - 11));
+            // Convert to metres
+            const metres = getMetres(kilometres);
+            // Set global radius to selected value
+            radius = metres
+            // Re-render places
+            initPlaces(currentLocation);
         }
 
         function filterHours() {
-
+            // TBC
         }
 
         // Get select menus
-        const selectRadius = document.querySelector('.select-topic')
+        const selectRadius = document.querySelector('.select-radius')
         const selectHours = document.querySelector('.select-hours')
 
         // Select Menu Event Listeners
