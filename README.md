@@ -3,6 +3,7 @@
 ## How to run
 ```npm install```
 ```npm run dev```
+Project starts on ```localhost:8080```
 
 This kicks off an npm script which runs nodemon and a gulp script which watches for SASS changes and immediately compiles it to CSS.
 
