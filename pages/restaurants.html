@@ -13,7 +13,7 @@
     <div id="wrapper">
 
         <div id="timer" style="opacity:0;">
-            <i class="fa fa-clock"></i> <span class="hours"></span>:<span class="minutes"></span><span style="display:none;" class="seconds"></span>
+            <span class="hours"></span>:<span class="minutes"></span>:<span class="seconds"></span>
         </div>
 
         <div class="container-fluid main-container">
@@ -60,26 +60,24 @@
                             </div>
                             <div class="col-4">
                                 <p>
-                                    <strong>Search By Open</strong>
+                                    <strong>Sort By Open/Closed</strong>
                                 </p>
                                 <p>
-                                    <select class="custom-select select-hours">
+                                    <select class="custom-select select-open">
+                                        <option>All</option>
                                         <option>Open</option>
-                                        <option>Closed</option>
                                     </select>
                                 </p>
                             </div>
 
                             <div class="col-4">
                                     <p>
-                                        <strong>Filter By Rating</strong>
+                                        <strong>Sort By Rating/Distance</strong>
                                     </p>
                                     <p>
-                                        <select class="custom-select select-hours">
-                                            <option>2+</option>
-                                            <option>3+</option>
-                                            <option>4+</option>
-                                            <option>4.5+</option>
+                                        <select class="custom-select select-rating">
+                                            <option>Rating</option>
+                                            <option>Distance</option>
                                         </select>
                                     </p>
                             </div>
@@ -108,6 +106,10 @@
         let myLocationLat, myLocationLng;
         // Default radius onload is 0.5 miles (in metres)
         let radius = 500;
+        // Default sort option to 'All'
+        let opennow = false
+        // Default sort option to rating
+        let sortByRatingOrDistance = 'Rating'
         // Object to hold our current location latlng values
         let currentLocation
 
@@ -134,6 +136,7 @@
             // Set local storage coordinates equal to the values held in latAndLng Array
             localStorage.setItem('coords', JSON.stringify(latAndLng));
         }
+
         let service
         let request
 
@@ -142,8 +145,10 @@
             request = {
                 location: currentLocation,
                 radius,
+                opennow,
                 type: ['restaurant']
             }
+            console.log(request);
             service.nearbySearch(request, callback)
         }
 
@@ -154,17 +159,13 @@
             }
             // If everything went swimminlgy
             if(status == google.maps.places.PlacesServiceStatus.OK) {
-                // Set the innerHTML of container equal to each result that came back from Google API
                 const newResults = results.map(result => {
-                    console.log(result);
-                    if(result.opening_hours) {
-                        const currentlyOpen = result.opening_hours.open_now ? 'open' : 'closed'
-                    }
                     // Get distance from current location
                     const distanceFromCurrentLocation = getDistanceFromLatLonInKm(currentLocation.lat, currentLocation.lng, result.geometry.location.lat(), result.geometry.location.lng());
-                    // Return an object on every iteration which contains HTML. It's done this way so we can the array by distance
+                    // Return an object on every iteration which contains HTML. It's done this way so we can the sort array by distance
                     return {
                         distance: distanceFromCurrentLocation,
+                        rating: result.rating,
                         domContent: `
                             <div class="row">
                                     <div class="col-12 col-md-8 offset-md-2 ecis-card">
@@ -190,7 +191,7 @@
                 });
 
                 // sort newResults by "distance" property and set innerHTML of container to the HTML stored in each object
-                const sorted = newResults.sort((a, b) => a.distance - b.distance)
+                const sorted = sortByRatingOrDistance == 'Distance' ? newResults.sort((a, b) => a.distance - b.distance) : newResults.sort((a, b) => a.rating - b.rating)
                 sorted.forEach(result => {
                     container.innerHTML += result.domContent
                 })
@@ -235,17 +236,28 @@
             initPlaces(currentLocation);
         }
 
-        function filterHours() {
-            // TBC
+        function sortRatingDistance() {
+            const selection = this.value;
+            sortByRatingOrDistance = selection
+            initPlaces(currentLocation)
+        }
+
+        function filterOpen() {
+            const selection = (this.value == 'Open')
+            console.log(selection);
+            opennow = selection
+            initPlaces(currentLocation);
         }
 
         // Get select menus
         const selectRadius = document.querySelector('.select-radius')
-        const selectHours = document.querySelector('.select-hours')
+        const sort = document.querySelector('.select-rating')
+        const selectOpen = document.querySelector('.select-open')
 
         // Select Menu Event Listeners
         selectRadius.addEventListener('change', filterRadius)
-        selectHours.addEventListener('change', filterHours)
+        sort.addEventListener('change', sortRatingDistance)
+        selectOpen.addEventListener('change', filterOpen)
 
         // Get every button with the class 'directions'
         const directionButtons = document.querySelectorAll('.directions')
