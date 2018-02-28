@@ -49,7 +49,7 @@
                                 </p>
                                 <p>
                                     <select class="custom-select select-speaker">
-                                        <option>Joe Bloggs</option>
+                                        <option>All</option>
                                         <option>Charles Pennington</option>
                                         <option>Benjamin Campbellssonn</option>
                                         <option>Michael NPM</option>
@@ -62,11 +62,11 @@
                                 </p>
                                 <p>
                                     <select class="custom-select select-topic">
+                                        <option>All</option>
                                         <option>Google Cloud</option>
                                         <option>NPM</option>
                                         <option>JavaScript</option>
                                         <option>Marketing</option>
-                                        <option></option>
                                     </select>
                                 </p>
                             </div>
@@ -76,6 +76,7 @@
                                 </p>
                                 <p>
                                     <select class="custom-select select-time">
+                                        <option>All</option>
                                         <option>09:00</option>
                                         <option>11:00</option>
                                         <option>14:00</option>
@@ -89,6 +90,7 @@
                                     </p>
                                     <p>
                                         <select class="custom-select select-date">
+                                            <option>All</option>
                                             <option>Monday 16th July</option>
                                             <option>Tuesday 17th July</option>
                                         </select>
@@ -102,7 +104,7 @@
                             </div>
                         </div>
 
-                        <div class="row result display">
+                        <div data-speaker="Michael NPM" data-topic="Introduction to Google Cloud" data-time="15:00" data-date="Tuesday 17th July" class="row result display">
                             <div data-lat="66.61869" data-lng="21.48751" class="col-12 col-md-8 offset-md-2 ecis-card">
                                 <h2>
                                     <a href="/schedule/example">
@@ -139,7 +141,7 @@
                             </div>
                         </div>
 
-                        <div class="row result display">
+                        <div data-speaker="Charles Pennington" data-topic="NPM Install" data-time="09:00" data-date="Monday 16th July" class="row result display">
                                 <div data-lat="66.61869" data-lng="21.48751" class="col-12 col-md-8 offset-md-2 ecis-card">
                                     <h2>
                                         <a href="/schedule/example">
@@ -176,11 +178,11 @@
                                 </div>
                             </div>
 
-                            <div class="row result display">
+                            <div data-speaker="Benjamin Campbellssonn" data-topic="Introduction to JavaScript" data-time="11:00" data-date="Tuesday 17th July" class="row result display">
                                     <div data-lat="66.61869" data-lng="21.48751" class="col-12 col-md-8 offset-md-2 ecis-card">
                                         <h2>
                                             <a href="/schedule/example">
-                                                Introduction to Google Cloud Services &amp; Their Uses
+                                                Introduction to JavaScript &amp; Their Uses
                                             </a>
                                         </h2>
                                         <p>
@@ -212,7 +214,6 @@
                                         </p>
                                     </div>
                                 </div>
-
                     </div>
                 </div>
 
@@ -246,57 +247,32 @@
                 numberOfResults.textContent = numberOfCards
             }
 
-            function filterAuthorResults() {
-            const option = this.value;
-            for (let i = 0; i < cardValues.length; i++) {
-                const speaker = cardValues[i].querySelector('.speaker').textContent;
-                if(speaker.includes(option)) {
-                    cardValues[i].classList.add('display');
-                } else {
-                    cardValues[i].classList.remove('display');
-                }
+            function returnAllCards() {
+                cardValues.forEach(card => {
+                    card.classList.add('display')
+                })
             }
-            updateFoundResults(totalResults)
-        }
 
-        function filterTopicResults() {
-            const option = this.value;
-            for (let i = 0; i < cardValues.length; i++) {
-                const h2 = cardValues[i].querySelector('h2').textContent
-                if(h2.includes(option)) {
-                    cardValues[i].classList.add('display');
-                } else {
-                    cardValues[i].classList.remove('display');
-                }
-            }
-            updateFoundResults(totalResults)
-        }
+        function filterSchedule() {
+            console.log('piss');
+            // Get dropdown values
+            const speakerValue = selectMenus[0].value
+            const topicValue = selectMenus[1].value
+            const timeValue = selectMenus[2].value
+            const dateValue = selectMenus[3].value
 
-        function filterTimeResults() {
-            const option = this.value;
-            for (let i = 0; i < cardValues.length; i++) {
-                const time = cardValues[i].querySelector('.time').textContent
-                if(time.includes(option)) {
-                    cardValues[i].classList.add('display');
-                } else {
-                    cardValues[i].classList.remove('display');
+            cardValues.forEach((card, i) => {
+                if((card.dataset.speaker.includes(speakerValue)  || selectMenus[i].value.includes('All')) &&
+                        (card.dataset.topic.includes(topicValue) || selectMenus[i].value.includes('All')) &&
+                        (card.dataset.time.includes(timeValue)   || selectMenus[i].value.includes('All')) &&
+                        (card.dataset.date.includes(dateValue)   || selectMenus[i].value.includes('All'))) {
+                            $(card).show();
                 }
-            }
-            updateFoundResults(totalResults)
-        }
-
-        function filterDateResults() {
-            const option = this.value;
-            for (let i = 0; i < cardValues.length; i++) {
-                const date = cardValues[i].querySelector('.date').textContent
-                if(date.includes(option)) {
-                    cardValues[i].classList.add('display');
-                } else {
-                    cardValues[i].classList.remove('display');
+                else {
+                    $(card).hide();
                 }
+            })
             }
-            updateFoundResults(totalResults)
-        }
 
         // Get every button with the class 'directions'
         const directionButtons = document.querySelectorAll('.directions')
@@ -304,18 +280,10 @@
         directionButtons.forEach(button => button.addEventListener('click', setCoords))
 
         // Get select menus
-        const selectSpeaker = document.querySelector('.select-speaker')
-        const selectTopic = document.querySelector('.select-topic')
-        const selectTime = document.querySelector('.select-time')
-        const selectDate = document.querySelector('.select-date')
+        const selectMenus = document.querySelectorAll('.custom-select')
 
-        // Select Menu Event Listeners
-        selectSpeaker.addEventListener('change', filterAuthorResults)
-        selectTopic.addEventListener('change', filterTopicResults)
-        selectTime.addEventListener('change', filterTimeResults)
-        selectDate.addEventListener('change', filterDateResults)
-
-
+        // Bind change event listener to each select menu
+        selectMenus.forEach(menu => menu.addEventListener('change', filterSchedule))
 
     </script>
     <script src="//code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
