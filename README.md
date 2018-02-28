@@ -1,6 +1,7 @@
 # ECS Walk up and use system
 
 ## How to run
+```npm install```
 ```npm run dev```
 
 This kicks off an npm script which runs nodemon and a gulp script which watches for SASS changes and immediately compiles it to CSS.
