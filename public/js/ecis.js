@@ -32,4 +32,75 @@ $(document).ready(function() {
         timer.css('opacity', '1');
     })();
 
+    // SCHEDULE FILTERING //
+    (() => {
+        if($('#schedule-page')) {
+
+            function setCoords() {
+                // Initialise latitude and longitude array
+                let latAndLng = [];
+                // Traverse to parent of button click
+                const parent = this.parentNode.parentNode;
+                // Get lat and long values from element's dataset attributes
+                const lat = parent.dataset.lat;
+                const lng = parent.dataset.lng;
+                // Push lat and long to array
+                latAndLng.push({lat, lng})
+                // Set local storage coordinates equal to the values held in latAndLng Array
+                localStorage.setItem('coords', JSON.stringify(latAndLng))
+            }
+
+            // Get every button with the class 'directions'
+            const directionButtons = document.querySelectorAll('.directions')
+            // Bind an click listener to each button. When any button is clicked, call setCoords
+            directionButtons.forEach(button => button.addEventListener('click', setCoords))
+
+            // SCHEDULE FILTERING
+            var currentFilters = {},
+                resultCount = $('#result-count'),
+                updateFilters = () => {
+                    $('.schedule-filter').each((i, e) => {
+                        var filter = $(e),
+                            filterId = filter.attr('data-fid'),
+                            current = filter.find(':selected').text();
+                        currentFilters[filterId] = current;
+                    });
+                },
+                updateResults = () => {
+                    // For every result...
+                    $('.result').each((i, e) => {
+                        var result = $(e);
+                        // Loop through every available filter
+                        for(var fid in currentFilters){
+                            if(currentFilters.hasOwnProperty(fid)) {
+                                // If the filter doesn't match the value, exit
+                                if(currentFilters[fid] != 'All' && !result.attr(`data-${fid}`).includes(currentFilters[fid])) {
+                                    result.hide();
+                                    return;
+                                }
+                            }
+                        }
+                        // All filters passed, so show result
+                        result.show();
+                    });
+                }
+                updateFiltersAndResults = () =>{
+                    updateFilters();
+                    updateResults();
+                };
+
+            // Initialise filters and results
+            updateFiltersAndResults();
+
+            // Add filter and result update to select change event
+            $('.schedule-filter').change(updateFiltersAndResults);
+
+            // Clear filters button
+            $('#clear-filters').click((e) => {
+                $('.schedule-filter').each((i, e) => $(e).val('All'));
+                updateFiltersAndResults();
+            });
+        }
+    })();
+
 });
