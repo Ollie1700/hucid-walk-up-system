@@ -31,7 +31,9 @@ block content
                     option Distance
         .row.num-results-row
             .col-12.text-center
-                strong 10 talks found:
+                strong
+                    span.count -
+                    | &nbsp;restaurants found:
         #results-container
     script.
         // Container for all our results
@@ -86,6 +88,7 @@ block content
         }
 
         function callback(results, status) {
+            console.log(results);
             // Remove everything from container
             while (container.firstChild) {
                 container.removeChild(container.firstChild);
@@ -108,7 +111,7 @@ block content
                                             <strong>Address:</strong> ${result.vicinity}
                                         </p>
                                         <p>
-                                            <strong>Rating:</strong> ${result.rating}
+                                            <strong>Rating:</strong> ${result.rating ? result.rating : 'No rating'}
                                         </p>
                                         <p>
                                             <strong>Distance from you:</strong> ${distanceFromCurrentLocation.toFixed(2)}km
@@ -125,10 +128,12 @@ block content
                 });
 
                 // sort newResults by "distance" property and set innerHTML of container to the HTML stored in each object
-                const sorted = sortByRatingOrDistance == 'Distance' ? newResults.sort((a, b) => a.distance - b.distance) : newResults.sort((a, b) => a.rating - b.rating)
+                const sorted = sortByRatingOrDistance == 'Distance' ? newResults.sort((a, b) => a.distance - b.distance) : newResults.sort((a, b) => b.rating - a.rating)
                 sorted.forEach(result => {
                     container.innerHTML += result.domContent
                 })
+
+                getTotalCards()
             }
         }
         function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
@@ -180,6 +185,14 @@ block content
             console.log(selection);
             opennow = selection
             initPlaces(currentLocation);
+        }
+
+        function getTotalCards() {
+            console.log('runninggggg');
+            const numberOfChildren = container.children.length
+            console.log(numberOfChildren);
+            const count = document.querySelector('.count')
+            count.innerHTML = numberOfChildren
         }
 
         // Get select menus
