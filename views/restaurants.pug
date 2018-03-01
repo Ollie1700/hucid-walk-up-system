@@ -1,105 +1,39 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>ECIS 2018</title>
+extends layout
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="/css/style.css">
-
-    <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
-</head>
-<body>
-    <div id="wrapper">
-
-        <div id="timer" style="opacity:0;">
-            <span class="hours"></span>:<span class="minutes"></span>:<span class="seconds"></span>
-        </div>
-
-        <div class="container-fluid main-container">
-
-            <div class="row main-container-row">
-
-                <div id="sidebar" class="col-1 d-flex flex-column justify-content-between">
-
-                        <div class="sidebar-top">
-                                <a href="/dashboard"><img src="/img/ecis-reverse-logo.png"></a>
-                                <div class="back">
-                                    Back
-                                    <span><i class="fas fa-2x fa-long-arrow-alt-left"></i></span>
-                                </div>
-                        </div>
-
-                    <a id="return-to-index" class="btn btn-light" href="/">
-                        <i class="fa fa-cog fa-2x"></i>
-                    </a>
-
-                </div>
-
-                <div id="page-content" class="col-11">
-                    <div class="inner">
-                        <h1 class="page-title">
-                            Restaurants
-                        </h1>
-
-                        <div class="row ecis-card">
-                            <div class="col-4">
-                                <p>
-                                    <strong>Search Within</strong>
-                                </p>
-                                <p>
-                                    <select class="custom-select select-radius">
-                                        <option>0.5 kilometres</option>
-                                        <option>1 kilometres</option>
-                                        <option>1.5 kilometres</option>
-                                        <option>2 kilometres</option>
-                                        <option>2.5 kilometres</option>
-                                        <option>3 kilometres</option>
-                                    </select>
-                                </p>
-                            </div>
-                            <div class="col-4">
-                                <p>
-                                    <strong>Sort By Open/Closed</strong>
-                                </p>
-                                <p>
-                                    <select class="custom-select select-open">
-                                        <option>All</option>
-                                        <option>Open</option>
-                                    </select>
-                                </p>
-                            </div>
-
-                            <div class="col-4">
-                                    <p>
-                                        <strong>Sort By Rating/Distance</strong>
-                                    </p>
-                                    <p>
-                                        <select class="custom-select select-rating">
-                                            <option>Rating</option>
-                                            <option>Distance</option>
-                                        </select>
-                                    </p>
-                            </div>
-                        </div>
-
-                        <div class="row num-results-row">
-                            <div class="col-12 text-center">
-                                <strong>10 talks found:</strong>
-                            </div>
-                        </div>
-
-                        <div id="results-container">
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> <!-- /#wrapper -->
-    <!-- END BODY CONTENT -->
-    <!-- JS -->
-    <script>
+block content
+    .inner
+        h1.page-title Restaurants
+        .row.ecis-card
+            .col-4
+                p
+                    strong Search Within
+                p
+                    select.custom-select.select-radius
+                        option 0.5 kilometres
+                        option 1 kilometres
+                        option 1.5 kilometres
+                        option 2 kilometres
+                        option 2.5 kilometres
+                        option 3 kilometres
+            .col-4
+                p
+                    strong Sort By Open/Closed
+                p
+                    select.custom-select.select-open
+                        option All
+                        option Open
+            .col-4
+                p
+                    strong Sort By Rating/Distance
+                p
+                select.custom-select.select-rating
+                    option Rating
+                    option Distance
+        .row.num-results-row
+            .col-12.text-center
+                strong 10 talks found:
+        #results-container
+    script.
         // Container for all our results
         const container = document.getElementById('results-container');
         // Our location, which will be populated with latitude and longitude after getCurrentLocation() is finished
@@ -112,7 +46,6 @@
         let sortByRatingOrDistance = 'Rating'
         // Object to hold our current location latlng values
         let currentLocation
-
         function getCurrentLocation() {
             // Asynchronously grabs the current location of the walk up system and pass those values into a map initalizer function
             navigator.geolocation.getCurrentPosition((position) => {
@@ -157,6 +90,7 @@
             while (container.firstChild) {
                 container.removeChild(container.firstChild);
             }
+
             // If everything went swimminlgy
             if(status == google.maps.places.PlacesServiceStatus.OK) {
                 const newResults = results.map(result => {
@@ -197,7 +131,6 @@
                 })
             }
         }
-
         function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
 
             function deg2rad(deg) {
@@ -264,11 +197,4 @@
         // Bind an click listener to each button. When any button is clicked, call setCoords
         directionButtons.forEach(button => button.addEventListener('click', setCoords))
 
-    </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDBskp6IOMHWbypxVLxH6SPpnyeSxz3NNQ&libraries=places&callback=getCurrentLocation" async defer></script>
-    <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <script src="/js/ecis.js"></script>
-</body>
-</html>
+    script(src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDBskp6IOMHWbypxVLxH6SPpnyeSxz3NNQ&libraries=places&callback=getCurrentLocation" async defer)

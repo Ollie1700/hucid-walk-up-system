@@ -12,7 +12,8 @@
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
     "nodemon": "^1.14.12",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "pug": "^2.0.0-rc.4"
   },
   "devDependencies": {
     "autoprefixer": "^8.0.0",
