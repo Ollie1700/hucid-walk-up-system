@@ -45,7 +45,8 @@ block content
         .row.num-results-row
             .col-12.text-center
                 strong
-                    span.count 10 talks found:
+                    span.count -
+                    | &nbsp;talks found:
         .row.result.display(data-speaker='Michael NPM', data-topic='Introduction to Google Cloud', data-time='15:00', data-date='Tuesday 17th July')
             .col-12.col-md-8.offset-md-2.ecis-card(data-lat='66.61869', data-lng='21.48751')
                 h2
@@ -127,6 +128,8 @@ block content
     script.
         const cardValues = document.querySelectorAll('.result')
         const totalResults = document.querySelector('.count')
+        updateFoundResults(totalResults)
+
             function setCoords() {
                 // Initialise latitude and longitude array
                 let latAndLng = [];
@@ -140,10 +143,12 @@ block content
                 // Set local storage coordinates equal to the values held in latAndLng Array
                 localStorage.setItem('coords', JSON.stringify(latAndLng))
             }
+
             function updateFoundResults(numberOfResults) {
                 const numberOfCards = document.querySelectorAll('.display').length
                 numberOfResults.textContent = numberOfCards
             }
+
             function filterAuthorResults() {
             const option = this.value;
             for (let i = 0; i < cardValues.length; i++) {
@@ -156,6 +161,7 @@ block content
             }
             updateFoundResults(totalResults)
         }
+
         function filterTopicResults() {
             const option = this.value;
             for (let i = 0; i < cardValues.length; i++) {
@@ -168,6 +174,7 @@ block content
             }
             updateFoundResults(totalResults)
         }
+
         function filterTimeResults() {
             const option = this.value;
             for (let i = 0; i < cardValues.length; i++) {
@@ -180,6 +187,7 @@ block content
             }
             updateFoundResults(totalResults)
         }
+
         function filterDateResults() {
             const option = this.value;
             for (let i = 0; i < cardValues.length; i++) {
@@ -192,6 +200,7 @@ block content
             }
             updateFoundResults(totalResults)
         }
+
         // Get every button with the class 'directions'
         const directionButtons = document.querySelectorAll('.directions')
         // Bind an click listener to each button. When any button is clicked, call setCoords
