@@ -1,0 +1,167 @@
+extends layout
+
+block content
+    .inner
+        h1.page-title Lecture Theaters
+        .row
+            .col-12.col-md-9
+                .row.search-row
+                    .col-12.ecis-card
+                        .row.d-flex.align-items-center
+                            .col-12.col-md-5
+                                strong Search By Name
+                            .col-12.col-md-5
+                                select.custom-select
+                                    option Harry Law
+                                    option Skitz Test Cunt
+                                    option Harry Law
+                                    option Harry Law
+                            .col-12.col-md-2
+                                button.btn.btn-primary Search
+                .row.ecis-card
+                    .col-12.col-md-5
+                        img(src='/img/accommodation.png')
+                    .col-12.col-md-6.offset-md-1(data-lat='66.61869', data-lng='21.48751')
+                        h2 Harry Law Halls of Residence
+                        p
+                            | University of Portsmouth
+                            br
+                            |                                             The Queen's Mall
+                            br
+                            |                                             Portsmouth
+                            br
+                            |                                             PO1 2SP
+                        .row
+                            .col-6
+                                a.btn.btn-primary.directions(href='/map')
+                                    | Get Directions
+                                    i.fa.fa-chevron-right
+                            .col-6
+                                a.btn.btn-warning(href='/accommodation/example')
+                                    | View Info
+                                    i.fa.fa-info-circle
+                .row.ecis-card
+                    .col-12.col-md-5
+                        img(src='/img/accommodation.png')
+                    .col-12.col-md-6.offset-md-1(data-lat='66.61869', data-lng='21.48751')
+                        h2 Skitz Test Cunt
+                        p
+                            | University of Portsmouth
+                            br
+                            |                                             The Queen's Mall
+                            br
+                            |                                             Portsmouth
+                            br
+                            |                                             PO1 2SP
+                        .row
+                            .col-6
+                                a.btn.btn-primary.directions(href='/map')
+                                    | Get Directions
+                                    i.fa.fa-chevron-right
+                            .col-6
+                                a.btn.btn-warning(href='/accommodation/example')
+                                    | View Info
+                                    i.fa.fa-info-circle
+                .row.ecis-card
+                    .col-12.col-md-5
+                        img(src='/img/accommodation.png')
+                    .col-12.col-md-6.offset-md-1(data-lat='66.61869', data-lng='21.48751')
+                        h2 Harry Law Halls of Residence
+                        p
+                            | University of Portsmouth
+                            br
+                            |                                             The Queen's Mall
+                            br
+                            |                                             Portsmouth
+                            br
+                            |                                             PO1 2SP
+                        .row
+                            .col-6
+                                a.btn.btn-primary.directions(href='/map')
+                                    | Get Directions
+                                    i.fa.fa-chevron-right
+                            .col-6
+                                a.btn.btn-warning(href='/accommodation/example')
+                                    | View Info
+                                    i.fa.fa-info-circle
+                .row.ecis-card
+                    .col-12.col-md-5
+                        img(src='/img/accommodation.png')
+                    .col-12.col-md-6.offset-md-1(data-lat='66.61869', data-lng='21.48751')
+                        h2 Harry Law Halls of Residence
+                        p
+                            | University of Portsmouth
+                            br
+                            |                                             The Queen's Mall
+                            br
+                            |                                             Portsmouth
+                            br
+                            |                                             PO1 2SP
+                        .row
+                            .col-6
+                                a.btn.btn-primary.directions(href='/map')
+                                    | Get Directions
+                                    i.fa.fa-chevron-right
+                            .col-6
+                                a.btn.btn-warning(href='/accommodation/example')
+                                    | View Info
+                                    i.fa.fa-info-circle
+                .row.ecis-card
+                    .col-12.col-md-5
+                        img(src='/img/accommodation.png')
+                    .col-12.col-md-6.offset-md-1(data-lat='66.61869', data-lng='21.48751')
+                        h2 Harry Law Halls of Residence
+                        p
+                            | University of Portsmouth
+                            br
+                            |                                             The Queen's Mall
+                            br
+                            |                                             Portsmouth
+                            br
+                            |                                             PO1 2SP
+                        .row
+                            .col-6
+                                a.btn.btn-primary.directions(href='/map')
+                                    | Get Directions
+                                    i.fa.fa-chevron-right
+                            .col-6
+                                a.btn.btn-warning(href='/accommodation/example')
+                                    | View Info
+                                    i.fa.fa-info-circle
+    script.
+                const cardValues = document.querySelectorAll('.ecis-card.row')
+            function setCoords() {
+            console.log('running')
+            // Initialise latitude and longitude array
+            let latAndLng = [];
+            // Traverse to parent of button click
+            const parent = this.parentNode.parentNode.parentNode;
+            // Get lat and long values from element's dataset attributes
+            const lat = parent.dataset.lat;
+            const lng = parent.dataset.lng;
+            // Push lat and long to array
+            latAndLng.push({lat, lng});
+            // Set local storage coordinates equal to the values held in latAndLng Array
+            localStorage.setItem('coords', JSON.stringify(latAndLng));
+        }
+
+        function filterResults() {
+            const option = this.value;
+            for (let i = 0; i < cardValues.length; i++) {
+                const h2 = cardValues[i].querySelector('h2').textContent
+                if(h2.includes(option)) {
+                    cardValues[i].style.display = 'block'
+                } else {
+                    cardValues[i].style.display = 'none'
+                }
+            }
+        }
+
+        // Get every button with the class 'directions'
+        const directionButtons = document.querySelectorAll('.directions')
+        // Bind an click listener to each button. When any button is clicked, call setCoords
+        directionButtons.forEach(button => button.addEventListener('click', setCoords))
+
+        // Get select menu
+        const selectMenu = document.querySelector('.custom-select')
+        selectMenu.addEventListener('change', filterResults)

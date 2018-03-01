@@ -1,0 +1,49 @@
+doctype html
+html
+  head
+    meta(charset="utf-8")
+    title= title
+
+    link(rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous")
+    link(rel="stylesheet" href="/css/style.css")
+
+    script(defer src="//use.fontawesome.com/releases/v5.0.6/js/all.js")
+
+  body
+    #wrapper
+      block timer
+        #timer(style='opacity:0;')
+          i.fa.fa-clock
+          span.hours
+          | :
+          span.minutes
+          span.seconds(style='display:none;')
+
+      .container-fluid.main-container
+        .row.main-container-row
+
+          block sidebar
+            #sidebar.col-1.d-flex.flex-column.justify-content-between
+              .sidebar-top
+                a(href='/dashboard')
+                  img(src='/img/ecis-reverse-logo.png')
+                .back
+                  | Back
+                  span
+                    i.fas.fa-2x.fa-long-arrow-alt-left
+
+              a#return-to-index.btn.btn-light(href='/')
+                i.fa.fa-cog.fa-2x
+
+          #page-content.col-11
+            block content
+              p Helllooo
+
+  block scripts
+    script(src='//code.jquery.com/jquery-3.3.1.min.js', integrity='sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=', crossorigin='anonymous')
+    script(src='//cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js', integrity='sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q', crossorigin='anonymous')
+    script(src='//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js', integrity='sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl', crossorigin='anonymous')
+    script(src='/js/ecis.js')
+
+
+

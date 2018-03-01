@@ -1,0 +1,208 @@
+extends layout
+
+block content
+
+    .inner
+        h1.page-title Schedule
+        .row.ecis-card
+            .col-4
+                p
+                    strong Search By Speaker
+                p
+                    select.custom-select.select-speaker
+                        option All
+                        option Charles Pennington
+                        option Benjamin Campbellssonn
+                        option Michael NPM
+            .col-4
+                p
+                    strong Search By Topic
+                p
+                    select.custom-select.select-topic
+                        option All
+                        option Google Cloud
+                        option NPM
+                        option JavaScript
+                        option Marketing
+            .col-4
+                p
+                 strong Search By Time
+                p
+                    select.custom-select.select-time
+                        option All
+                        option 09:00
+                        option 11:00
+                        option 14:00
+                        option 15:00
+            .col-4
+                p
+                    strong Search By Date
+                p
+                    select.custom-select.select-date
+                        option All
+                        option Monday 16th July
+                        option Tuesday 17th July
+        .row.num-results-row
+            .col-12.text-center
+                strong
+                    span.count 10 talks found:
+        .row.result.display(data-speaker='Michael NPM', data-topic='Introduction to Google Cloud', data-time='15:00', data-date='Tuesday 17th July')
+            .col-12.col-md-8.offset-md-2.ecis-card(data-lat='66.61869', data-lng='21.48751')
+                h2
+                    a(href='/schedule/example') Introduction to Google Cloud Services & Their Uses
+                p
+                    a(href='/speaker')
+                    strong Speaker:&nbsp;
+                    span.speaker Michael NPM
+                p
+                    a(href='#')
+                    strong Location:&nbsp;
+                    Richmond 1.01
+                p
+                    a(href='#')
+                    strong Date:&nbsp;
+                    span.date Tuesday 17th July
+                p
+                    a(href='#')
+                    strong Time:
+                    span.time 15:00
+
+                p.d-flex.align-items-center.justify-content-between
+                    a.btn.btn-primary.directions(href='/map') Get Directions
+                        i.fa.fa-chevron-right
+                    a.btn.btn-warning(href='/email') Send To Email
+                        i.fa.fa-paper-plane
+
+        .row.result.display(data-speaker='Charles Pennington', data-topic='NPM Install', data-time='09:00', data-date='Monday 16th July')
+            .col-12.col-md-8.offset-md-2.ecis-card(data-lat='66.61869', data-lng='21.48751')
+                h2
+                    a(href='/schedule/example') NPM Install & its Uses
+                p
+                    a(href='/speaker')
+                    strong Speaker:&nbsp;
+                    span.speaker Charles Pennington
+                p
+                    a(href='#')
+                    strong Location:&nbsp;
+                    Richmond 1.01
+                p
+                    a(href='#')
+                    strong Date:&nbsp;
+                    span.date Monday 16th July
+                p
+                    a(href='#')
+                    strong Time:&nbsp;
+                    span.time 09:00
+                p.d-flex.align-items-center.justify-content-between
+                    a.btn.btn-primary.directions(href='/map') Get Directions
+                        i.fa.fa-chevron-right
+                    a.btn.btn-warning(href='/email') Send To Email
+                        i.fa.fa-paper-plane
+
+        .row.result.display(data-speaker='Benjamin Campbellssonn', data-topic='Introduction to JavaScript', data-time='11:00', data-date='Tuesday 17th July')
+            .col-12.col-md-8.offset-md-2.ecis-card(data-lat='66.61869', data-lng='21.48751')
+                h2
+                    a(href='/schedule/example') Introduction to JavaScript & Their Uses
+                p
+                    a(href='/speaker')
+                    strong Speaker:
+                    span.speaker Benjamin Campbellssonn
+                p
+                    a(href='#')
+                    strong Location:&nbsp;
+                    |  Richmond 1.01
+                p
+                    a(href='#')
+                    strong Date:&nbsp;
+                    span.date Tuesday 17th July
+                p
+                    a(href='#')
+                    strong Time:&nbsp;
+                    span.time 11:00
+                p.d-flex.align-items-center.justify-content-between
+                    a.btn.btn-primary.directions(href='/map') Get Directions
+                        i.fa.fa-chevron-right
+                    a.btn.btn-warning(href='/email') Send To Email
+                        i.fa.fa-paper-plane
+    script.
+        const cardValues = document.querySelectorAll('.result')
+        const totalResults = document.querySelector('.count')
+            function setCoords() {
+                // Initialise latitude and longitude array
+                let latAndLng = [];
+                // Traverse to parent of button click
+                const parent = this.parentNode.parentNode;
+                // Get lat and long values from element's dataset attributes
+                const lat = parent.dataset.lat;
+                const lng = parent.dataset.lng;
+                // Push lat and long to array
+                latAndLng.push({lat, lng})
+                // Set local storage coordinates equal to the values held in latAndLng Array
+                localStorage.setItem('coords', JSON.stringify(latAndLng))
+            }
+            function updateFoundResults(numberOfResults) {
+                const numberOfCards = document.querySelectorAll('.display').length
+                numberOfResults.textContent = numberOfCards
+            }
+            function filterAuthorResults() {
+            const option = this.value;
+            for (let i = 0; i < cardValues.length; i++) {
+                const speaker = cardValues[i].querySelector('.speaker').textContent;
+                if(speaker.includes(option)) {
+                    cardValues[i].classList.add('display');
+                } else {
+                    cardValues[i].classList.remove('display');
+                }
+            }
+            updateFoundResults(totalResults)
+        }
+        function filterTopicResults() {
+            const option = this.value;
+            for (let i = 0; i < cardValues.length; i++) {
+                const h2 = cardValues[i].querySelector('h2').textContent
+                if(h2.includes(option)) {
+                    cardValues[i].classList.add('display');
+                } else {
+                    cardValues[i].classList.remove('display');
+                }
+            }
+            updateFoundResults(totalResults)
+        }
+        function filterTimeResults() {
+            const option = this.value;
+            for (let i = 0; i < cardValues.length; i++) {
+                const time = cardValues[i].querySelector('.time').textContent
+                if(time.includes(option)) {
+                    cardValues[i].classList.add('display');
+                } else {
+                    cardValues[i].classList.remove('display');
+                }
+            }
+            updateFoundResults(totalResults)
+        }
+        function filterDateResults() {
+            const option = this.value;
+            for (let i = 0; i < cardValues.length; i++) {
+                const date = cardValues[i].querySelector('.date').textContent
+                if(date.includes(option)) {
+                    cardValues[i].classList.add('display');
+                } else {
+                    cardValues[i].classList.remove('display');
+                }
+            }
+            updateFoundResults(totalResults)
+        }
+        // Get every button with the class 'directions'
+        const directionButtons = document.querySelectorAll('.directions')
+        // Bind an click listener to each button. When any button is clicked, call setCoords
+        directionButtons.forEach(button => button.addEventListener('click', setCoords))
+        // Get select menus
+        const selectSpeaker = document.querySelector('.select-speaker')
+        const selectTopic = document.querySelector('.select-topic')
+        const selectTime = document.querySelector('.select-time')
+        const selectDate = document.querySelector('.select-date')
+        // Select Menu Event Listeners
+        selectSpeaker.addEventListener('change', filterAuthorResults)
+        selectTopic.addEventListener('change', filterTopicResults)
+        selectTime.addEventListener('change', filterTimeResults)
+        selectDate.addEventListener('change', filterDateResults)

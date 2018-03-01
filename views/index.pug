@@ -1,0 +1,24 @@
+extends layout
+
+block content
+    .container-fluid
+        .row.ecis-logo-row
+            .col-12.text-center
+                img(src='/img/ecis-logo.png')
+        .row
+            .col-12
+                h1.index-title.text-center Conference Information Centre
+        .row.justify-content-center.language-selector-row
+            .col-auto.text-center
+                p
+                    a(href='#') Please Select Your Language
+                p
+                select.custom-select
+                    option English
+                    option Français
+                    option Deutsche
+                    option Español
+                    option Pусский
+                    option 中文
+                p
+                    a.btn.btn-primary(href='/dashboard') Begin

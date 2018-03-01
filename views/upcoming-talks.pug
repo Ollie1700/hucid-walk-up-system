@@ -1,0 +1,88 @@
+extends layout
+
+block content
+    .inner
+        h1.page-title Upcoming Talks
+        .row
+            .col-12.col-md-8
+                .upcoming-talk-card(data-lat='50.798127', data-lng='-1.099660')
+                    h2 Introduction to Google Cloud Services & Their Uses
+                    p Speaker: Stewart Randall
+                    p Location: Richmond 1.01
+                    p Time: 15:30pm
+                    .upcoming-talk-card-cta-container.d-flex.justify-content-between
+                        a.directions.btn.btn-primary(href='/map') Get Directions
+                            i.fa.fa-chevron-right
+                        a.btn.btn-warning(href='/email') Send To Email
+                            i.fa.fa-paper-plane
+
+                .upcoming-talk-card(data-lat='50.796189', data-lng='-1.094146')
+                    h2 Introduction to Amazon Web Services & Their Uses
+                    p Speaker: Charles Pennington
+                    p Location: James Watson Hall, Southsea 1.01
+                    p Time: 16:30pm
+                    .upcoming-talk-card-cta-container.d-flex.justify-content-between
+                        a.directions.btn.btn-primary(href='/map')
+                            | Get Directions
+                            i.fa.fa-chevron-right
+                        a.btn.btn-warning(href='/email')
+                            | Send To Email
+                            i.fa.fa-paper-plane
+
+                .upcoming-talk-card
+                    h2 Introduction to Google Cloud Services & Their Uses
+                    p Speaker: Stewart Randall
+                    p Location: Richmond 1.01
+                    p Time: 15:30pm
+                        .upcoming-talk-card-cta-container.d-flex.justify-content-between
+                            a.directions.btn.btn-primary(href='#')
+                                | Get Directions
+                                i.fa.fa-chevron-right
+                            a.btn.btn-warning(href='/email')
+                                | Send To Email
+                                i.fa.fa-paper-plane
+
+                .upcoming-talk-card
+                    h2 Introduction to Google Cloud Services & Their Uses
+                    p Speaker: Stewart Randall
+                    p Location: Richmond 1.01
+                    p Time: 15:30pm
+                        .upcoming-talk-card-cta-container.d-flex.justify-content-between
+                            a.directions.btn.btn-primary(href='#')
+                                | Get Directions
+                                i.fa.fa-chevron-right
+                            a.btn.btn-warning(href='/email')
+                                | Send To Email
+                                i.fa.fa-paper-plane
+
+                .upcoming-talk-card
+                    h2 Introduction to Google Cloud Services & Their Uses
+                    p  Speaker: Stewart Randall
+                    p  Location: Richmond 1.01
+                    p Time: 15:30pm
+                        .upcoming-talk-card-cta-container.d-flex.justify-content-between
+                            a.directions.btn.btn-primary(href='#')
+                                | Get Directions
+                                i.fa.fa-chevron-right
+                            a.btn.btn-warning(href='/email')
+                                | Send To Email
+                                i.fa.fa-paper-plane
+
+    script.
+        function setCoords() {
+            // Initialise latitude and longitude array
+            let latAndLng = []
+            // Traverse to parent of button click
+            const parent = this.parentNode.parentNode
+            // Get lat and long values from element's dataset attributes
+            const lat = parent.dataset.lat
+            const lng = parent.dataset.lng
+            // Push lat and long to array
+            latAndLng.push({lat, lng})
+            // Set local storage coordinates equal to the values held in latAndLng Array
+            localStorage.setItem('coords', JSON.stringify(latAndLng))
+        }
+        // Get every button with the class 'directions'
+        const directionButtons = document.querySelectorAll('.directions')
+        // Bind an click listener to each button. When any button is clicked, call setCoords
+        directionButtons.forEach(button => button.addEventListener('click', setCoords))
