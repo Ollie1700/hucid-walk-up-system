@@ -1,5 +1,59 @@
 $(document).ready(function() {
 
+    // TRANSLATE
+    (() => {
+        const translateButton = $('#language-tester');
+        const testEnabled = document.cookie.includes('enabled');
+        const cookieName = 'languagetest';
+
+        translate.engine = 'yandex';
+        translate.key = 'trnsl.1.1.20180322T133253Z.63b39de61ae88de4.20502fb6defaf22a33b4a69c72fd87567b8c542e';
+
+        var getTextNodesIn = function(el) {
+            return $(el).find(":not(iframe)").addBack().contents().filter(function() {
+                return this.nodeType == 3;
+            });
+        };
+
+        function toggleLabel() {
+            if(testEnabled) {
+                translateButton.html('Disable Language Test');
+            }
+            else {
+                translateButton.html('Enable Language Test');
+            }
+        }
+
+        function translateThePage() {
+            if(testEnabled) {
+                getTextNodesIn('body').each((i, e) => {
+                    translate($(e).html(), 'ko').then(text => {
+                        $(e).html(text);
+                    });
+                });
+            }
+        }
+
+        toggleLabel();
+
+        translateThePage();
+
+        translateButton.click((e) => {
+            e.preventDefault();
+
+            if(testEnabled) {
+                document.cookie = cookieName + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"
+            }
+            else {
+                document.cookie = cookieName + "=enabled; expires=Thu, 01 Jan 2070 00:00:00 UTC; path=/;"
+            }
+
+            toggleLabel();
+            window.location.reload(true);
+        });
+
+    })();
+
     // BACK BUTTON
     (() => {
         const backButton = $('.back');
